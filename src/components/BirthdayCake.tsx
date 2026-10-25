@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Sparkles, Wind, Mic, MicOff, RotateCcw } from 'lucide-react'
 import { config } from '../config'
 import Heart, { HEART_PATH } from './Heart'
+import { letterFx } from '../lib/letterAudio'
 
 /** Generates a soft breath sound and magical chime arpeggio using Web Audio API */
 function playCelebrationAudio() {
@@ -76,6 +77,10 @@ const PARTICLE_COLORS = ['#D7B77A', '#E9A5B5', '#F7DDE2', '#4B1728', '#D48197', 
 export default function BirthdayCake() {
   const reduce = !!useReducedMotion()
   const [blown, setBlown] = useState(false)
+  const [isCut, setIsCut] = useState(false)
+  const [isCutting, setIsCutting] = useState(false)
+  const [bitten, setBitten] = useState(false)
+  const [bittenHearts, setBittenHearts] = useState<{ id: number; x: number; y: number }[]>([])
   const [micActive, setMicActive] = useState(false)
   const [micVolume, setMicVolume] = useState(0)
   const [micError, setMicError] = useState<string | null>(null)
@@ -85,8 +90,21 @@ export default function BirthdayCake() {
   const micCtxRef = useRef<AudioContext | null>(null)
   const micRafRef = useRef<number | null>(null)
 
-  const { title, subtitle, candleInstruction, wishGrantedBadge, wishGrantedHeadline, wishGrantedMessage, relightButton } =
-    config.cake
+  const {
+    title,
+    subtitle,
+    candleInstruction,
+    wishGrantedBadge,
+    wishGrantedHeadline,
+    wishGrantedMessage,
+    cutInstruction = 'Tap the golden knife to cut your birthday slice together ♡',
+    cutButton = 'Cut the Birthday Cake 🎂✨',
+    sliceHeading = 'The First Slice for Bhavana 🍰',
+    sliceMessage = 'Sweet, soft strawberry-rose heart sponge, baked with all my love.\nMay every single year ahead be even sweeter than the last ♡',
+    biteButton = 'Take a bite together ♡ 🍴',
+    bittenMessage = 'Mmm, delicious! The sweetest birthday slice for the sweetest girl ♡',
+    relightButton,
+  } = config.cake
 
   const headline = wishGrantedHeadline.replace('{name}', config.herName)
 
@@ -99,9 +117,38 @@ export default function BirthdayCake() {
     stopMic()
   }
 
-  // Relight candle
+  // Trigger cake slicing animation
+  const cutCake = () => {
+    if (isCut || isCutting) return
+    setIsCutting(true)
+    letterFx.playCakeCut()
+    window.setTimeout(() => {
+      setIsCutting(false)
+      setIsCut(true)
+      setBurstKey((k) => k + 1)
+    }, 650)
+  }
+
+  // Take a bite of the cake slice
+  const takeBite = () => {
+    if (bitten) return
+    setBitten(true)
+    letterFx.playJarPick()
+    const newHearts = Array.from({ length: 6 }, (_, i) => ({
+      id: Date.now() + i,
+      x: (Math.random() - 0.5) * 60,
+      y: -(20 + Math.random() * 45),
+    }))
+    setBittenHearts(newHearts)
+  }
+
+  // Relight candle & reset cake
   const relightCandle = () => {
     setBlown(false)
+    setIsCut(false)
+    setIsCutting(false)
+    setBitten(false)
+    setBittenHearts([])
   }
 
   // Generate celebration particles when blown
@@ -306,7 +353,35 @@ export default function BirthdayCake() {
                   </span>
                 </motion.div>
               )}
+              {blown && !isCut && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  className="pointer-events-none absolute left-1/2 top-2 z-20 -translate-x-1/2"
+                >
+                  <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-champagne/60 bg-ivory/95 px-3.5 py-1 text-xs font-semibold text-burgundy shadow-md backdrop-blur-sm">
+                    <span className="h-1.5 w-1.5 animate-ping rounded-full bg-champagne" />
+                    {cutInstruction}
+                  </span>
+                </motion.div>
+              )}
             </AnimatePresence>
+
+            {/* Floating Bitten Hearts */}
+            <div aria-hidden className="pointer-events-none absolute inset-0 overflow-visible">
+              {bittenHearts.map((h) => (
+                <motion.span
+                  key={h.id}
+                  initial={{ opacity: 1, x: 260 + h.x, y: 220, scale: 0.6 }}
+                  animate={{ opacity: 0, y: 160 + h.y, scale: 1.5 }}
+                  transition={{ duration: 1.4, ease: 'easeOut' }}
+                  className="absolute font-hand text-2xl text-petal"
+                >
+                  ♡
+                </motion.span>
+              ))}
+            </div>
 
             {/* Cake SVG */}
             <svg
@@ -352,6 +427,27 @@ export default function BirthdayCake() {
                   <stop offset="40%" stopColor="#FFF9F5" />
                   <stop offset="70%" stopColor="#EAD29A" />
                   <stop offset="100%" stopColor="#C49B50" />
+                </linearGradient>
+
+                {/* Strawberry Rose Sponge Layer Gradient */}
+                <linearGradient id="spongeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#F8A8B8" />
+                  <stop offset="50%" stopColor="#FFCCD7" />
+                  <stop offset="100%" stopColor="#F49AAD" />
+                </linearGradient>
+
+                {/* Strawberry Heart Jam Core Gradient */}
+                <linearGradient id="jamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#E0284F" />
+                  <stop offset="100%" stopColor="#9E1231" />
+                </linearGradient>
+
+                {/* Golden Knife Blade Gradient */}
+                <linearGradient id="knifeBlade" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#C8A059" />
+                  <stop offset="35%" stopColor="#FFF9EB" />
+                  <stop offset="70%" stopColor="#D7B77A" />
+                  <stop offset="100%" stopColor="#9C7733" />
                 </linearGradient>
 
                 {/* Flame Gradients */}
@@ -436,6 +532,128 @@ export default function BirthdayCake() {
                 const py = 210 + Math.sin(angle) * 21
                 return <circle key={`pearl-top-${i}`} cx={px} cy={py} r="2" fill="#E9A5B5" opacity="0.6" />
               })}
+
+              {/* EXPOSED CAKE INTERIOR CROSS-SECTION (When Cut) */}
+              {isCut && (
+                <g className="cake-cutaway-interior">
+                  {/* Left Cut Face (facing viewer left) */}
+                  <polygon points="220,210 252,228 252,286 220,268" fill="#FFFDF8" stroke="#EAD29A" strokeWidth="0.5" />
+                  {/* Layer 1: Top Strawberry Sponge */}
+                  <polygon points="220,214 252,232 252,246 220,228" fill="url(#spongeGrad)" />
+                  {/* Cream Filling */}
+                  <polygon points="220,228 252,246 252,251 220,233" fill="#FFFDF8" />
+                  {/* Layer 2: Strawberry Heart Jam Core */}
+                  <polygon points="220,233 252,251 252,263 220,245" fill="url(#jamGrad)" />
+                  {/* Center Heart in the Jam Core */}
+                  <g transform="translate(230, 246) scale(0.38)">
+                    <path d={HEART_PATH} fill="#FFF0F5" opacity="0.95" />
+                  </g>
+                  {/* Cream Filling */}
+                  <polygon points="220,245 252,263 252,268 220,250" fill="#FFFDF8" />
+                  {/* Layer 3: Bottom Strawberry Sponge */}
+                  <polygon points="220,250 252,268 252,282 220,264" fill="url(#spongeGrad)" />
+
+                  {/* Right Cut Face */}
+                  <polygon points="220,210 286,220 286,278 220,268" fill="#F8A7B6" opacity="0.9" stroke="#EAD29A" strokeWidth="0.5" />
+                  <polygon points="220,234 286,244 286,254 220,244" fill="url(#jamGrad)" opacity="0.85" />
+                </g>
+              )}
+
+              {/* SEPARATE CAKE SLICE ON PORCELAIN DESSERT PLATE (When Cut) */}
+              {isCut && (
+                <motion.g
+                  initial={{ x: -25, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 0.8, type: 'spring', bounce: 0.28 }}
+                  className="cake-slice-plate cursor-pointer select-none"
+                  onClick={takeBite}
+                >
+                  {/* Gold-Rimmed Dessert Plate */}
+                  <ellipse cx="340" cy="286" rx="56" ry="15" fill="#FFFDF8" stroke="#D7B77A" strokeWidth="1.5" />
+                  <ellipse cx="340" cy="285" rx="47" ry="11" fill="#FFF9F5" stroke="#EAD29A" strokeWidth="0.8" opacity="0.65" />
+
+                  {/* Cake Slice Wedge */}
+                  {/* Top Glaze Surface */}
+                  <polygon points="314,242 358,250 334,258" fill="#F8A5B6" stroke="#D7B77A" strokeWidth="0.75" />
+                  {/* Dripping Glaze Rosette Edge */}
+                  <path d="M314 242 Q324 246 334 258 Q346 254 358 250" stroke="#FFFDF8" strokeWidth="1.5" fill="none" />
+
+                  {/* Slice Cut Side (Displaying strawberry heart layers) */}
+                  <polygon points="314,242 334,258 334,286 314,272" fill="#FFFDF8" />
+                  <polygon points="314,246 334,262 334,273 314,258" fill="url(#spongeGrad)" />
+                  <polygon points="314,258 334,273 334,279 314,264" fill="url(#jamGrad)" />
+                  <polygon points="314,264 334,279 334,285 314,270" fill="url(#spongeGrad)" />
+
+                  {/* Slice Back Tier Crust */}
+                  <polygon points="334,258 358,250 358,278 334,286" fill="url(#tier1Grad)" />
+
+                  {/* Fresh Sliced Strawberry Topping */}
+                  <path
+                    d="M344 242 C340 236 346 230 350 235 C354 230 360 236 356 242 Z"
+                    fill="#E52E52"
+                  />
+                  <circle cx="348" cy="239" r="0.8" fill="#FFD700" />
+                  <circle cx="352" cy="240" r="0.8" fill="#FFD700" />
+                  <path d="M350 234 L347 230 M350 234 L353 230" stroke="#5B8A50" strokeWidth="1.2" strokeLinecap="round" />
+
+                  {/* Whipped Cream Rosette */}
+                  <circle cx="352" cy="248" r="5" fill="#FFFDF8" stroke="#FDECEF" strokeWidth="0.5" />
+                  <circle cx="352" cy="247" r="2.5" fill="#FFF9F5" />
+
+                  {/* Miniature Golden Dessert Fork */}
+                  <path d="M378 272 L392 290" stroke="#D7B77A" strokeWidth="2.2" strokeLinecap="round" />
+                  <path d="M375 268 L381 274 M377 266 L383 272 M379 264 L385 270" stroke="#D7B77A" strokeWidth="1.2" strokeLinecap="round" />
+
+                  {/* Heart Bite Cutout when Bitten */}
+                  {bitten ? (
+                    <g className="cake-bite-mark">
+                      <path d="M312 240 Q320 246 317 252 Q313 258 318 264" fill="#FFF9F5" />
+                      <circle cx="316" cy="286" r="1.5" fill="#E9A5B5" />
+                      <circle cx="322" cy="288" r="1.2" fill="#D7B77A" />
+                      <circle cx="312" cy="284" r="1" fill="#C42B49" />
+                    </g>
+                  ) : null}
+                </motion.g>
+              )}
+
+              {/* GOLDEN CAKE SERVER / KNIFE (When Blown & Cutting) */}
+              {blown && !isCut && (
+                <motion.g
+                  onClick={cutCake}
+                  className="cursor-pointer select-none"
+                  animate={
+                    isCutting
+                      ? { y: [0, 65, 120], rotate: [-16, 2, -6] }
+                      : { y: [0, -7, 0], rotate: [-12, -7, -12] }
+                  }
+                  transition={
+                    isCutting
+                      ? { duration: 0.65, ease: 'easeInOut' }
+                      : { repeat: Infinity, duration: 2.2, ease: 'easeInOut' }
+                  }
+                  style={{ originX: '260px', originY: '120px' }}
+                >
+                  {/* Golden Knife Blade */}
+                  <path
+                    d="M260 70 L270 75 L265 160 C264 172 258 178 255 180 L253 180 L256 70 Z"
+                    fill="url(#knifeBlade)"
+                    filter="drop-shadow(0 4px 8px rgba(75,23,40,0.22))"
+                  />
+                  {/* Blade Edge Highlight */}
+                  <path d="M256 72 L256 178" stroke="#FFFDF5" strokeWidth="1.5" opacity="0.9" />
+                  {/* Gold Bolster */}
+                  <rect x="252" y="60" width="12" height="10" rx="2" fill="#D7B77A" />
+                  {/* Rosewood Handle */}
+                  <path d="M254 18 L262 18 L263 60 L253 60 Z" fill="#4B1728" />
+                  {/* Gold Handle Rivets */}
+                  <circle cx="258" cy="30" r="1.5" fill="#D7B77A" />
+                  <circle cx="258" cy="48" r="1.5" fill="#D7B77A" />
+                  {/* Satin Ribbon Bow */}
+                  <path d="M258 64 C250 56 242 62 250 70 C258 78 266 70 258 64 Z" fill="#E9A5B5" />
+                  <path d="M258 64 C266 56 274 62 266 70 C258 78 250 70 258 64 Z" fill="#E9A5B5" />
+                  <circle cx="258" cy="64" r="2.5" fill="#D7B77A" />
+                </motion.g>
+              )}
 
               {/* 3. TIER 2 (TOP TIER) */}
               {/* Tier 2 Body Side */}
@@ -719,19 +937,71 @@ export default function BirthdayCake() {
                   )}
                 </button>
               </>
+            ) : !isCut ? (
+              <div className="flex flex-wrap items-center justify-center gap-3.5">
+                <motion.button
+                  type="button"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  onClick={cutCake}
+                  className="btn-glow inline-flex min-h-[50px] items-center gap-2.5 rounded-full bg-gradient-to-r from-burgundy via-[#78263f] to-burgundy px-8 py-3.5 font-serif text-lg text-ivory shadow-xl transition-transform"
+                >
+                  <Sparkles className="h-4 w-4 text-champagne" />
+                  {cutButton}
+                  <Heart className="h-4 w-4 fill-petal text-petal" />
+                </motion.button>
+
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  type="button"
+                  onClick={relightCandle}
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-champagne/50 bg-ivory/90 px-6 py-2.5 font-medium text-burgundy shadow-sm transition-colors hover:bg-blush/40"
+                >
+                  <RotateCcw className="h-4 w-4 text-champagne" />
+                  {relightButton}
+                </motion.button>
+              </div>
             ) : (
-              <motion.button
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                type="button"
-                onClick={relightCandle}
-                className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-champagne/50 bg-ivory/90 px-6 py-2.5 font-medium text-burgundy shadow-sm transition-colors hover:bg-blush/40"
-              >
-                <RotateCcw className="h-4 w-4 text-champagne" />
-                {relightButton}
-              </motion.button>
+              <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-wrap items-center justify-center gap-3.5">
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={takeBite}
+                    className="btn-glow inline-flex min-h-[50px] items-center gap-2.5 rounded-full bg-gradient-to-r from-burgundy via-[#78263f] to-burgundy px-8 py-3.5 font-serif text-lg text-ivory shadow-xl transition-transform"
+                  >
+                    <Sparkles className="h-4 w-4 text-champagne" />
+                    {bitten ? 'Take another bite ♡ 🍴' : biteButton}
+                    <Heart className="h-4 w-4 fill-petal text-petal" />
+                  </motion.button>
+
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.96 }}
+                    type="button"
+                    onClick={relightCandle}
+                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-champagne/50 bg-ivory/90 px-6 py-2.5 font-medium text-burgundy shadow-sm transition-colors hover:bg-blush/40"
+                  >
+                    <RotateCcw className="h-4 w-4 text-champagne" />
+                    {relightButton}
+                  </motion.button>
+                </div>
+                {bitten && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="font-hand text-2xl text-[#A8405F]"
+                  >
+                    {bittenMessage}
+                  </motion.p>
+                )}
+              </div>
             )}
           </div>
 
@@ -770,6 +1040,27 @@ export default function BirthdayCake() {
               <p className="whitespace-pre-line font-hand text-[1.65rem] leading-snug text-burgundy/85 sm:text-[1.85rem]">
                 {wishGrantedMessage}
               </p>
+
+              {/* Special First Slice Reveal Section */}
+              {isCut && (
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="mt-8 border-t border-champagne/35 pt-7 text-center"
+                >
+                  <span className="inline-block font-sans text-[11px] font-semibold tracking-[0.25em] text-[#9A6B2F]">
+                    ✦ THE SWEETEST FIRST SLICE ✦
+                  </span>
+                  <h4 className="mt-2 font-serif text-2xl text-burgundy sm:text-3xl">
+                    {sliceHeading}
+                  </h4>
+                  <div className="mx-auto my-4 h-px w-16 bg-gradient-to-r from-transparent via-champagne to-transparent" />
+                  <p className="whitespace-pre-line font-hand text-[1.65rem] leading-snug text-burgundy/85 sm:text-[1.8rem]">
+                    {sliceMessage}
+                  </p>
+                </motion.div>
+              )}
 
               <div className="mt-7 flex items-center justify-center gap-2 font-hand text-xl text-[#A8405F]">
                 <span>With all my love,</span>

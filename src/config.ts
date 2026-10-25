@@ -25,73 +25,144 @@ export const config = {
 
   /* ---------- Screen 1: the invitation ---------- */
   invitation: {
-    title: 'Happy Birthday to the girl who makes my world beautiful.',
-    subtitle: 'Today is your day. I made this little universe just for your special day. Take a little journey with me.',
-    button: 'Open your birthday surprise ♡',
+    title: 'Happy Birthday, my love.',
+    subtitle: 'A little universe made just for you and your special day ♡',
+    button: 'Open your surprise ♡',
+    /** The exact birthday date & time (YYYY-MM-DDTHH:mm:ss). When reached live, the main page opens automatically! */
+    targetDate: '2026-11-02T00:00:00',
+    countdownBadge: "Counting down to Bhavana's special day",
+    birthdayArrivedBadge: "🎉 Happy Birthday, Bhavana! 🎂",
   },
 
   /* ---------- Screen 2: her name ---------- */
   intro: {
     greeting: 'Happy Birthday, my love,',
-    headlineLines: ['Today the world became brighter,', 'because it gave me you.'],
-    support: 'Out of all the people and stars in this universe, my heart found its home in you.',
+    headlineLines: ['The world is brighter', 'because it gave me you.'],
+    support: 'Out of all the stars in this universe, my heart found its home in you.',
   },
 
   /* ---------- Screen 3: the letter ---------- */
   letter: {
     title: 'A birthday letter from my heart',
-    intro: 'Some things are easier to write than to say out loud.',
+    intro: 'Written with all my love, just for you.',
     greeting: 'My Dearest Bhavana,',
     paragraphs: [
-      'Happy Birthday, my love. Another year of you being the sweetest, most wonderful person in my world.',
-      'I don’t know if I will ever find enough words to explain what you mean to me, but I know this: you have made ordinary days feel special, little moments feel unforgettable, and my life so much warmer just by being in it.',
-      'If I could give you any gift today, it would be the ability to see yourself through my eyes. Then you would understand how deeply loved, incredibly special, and irreplaceable you are to me.',
-      'You are not just someone I love. You are someone I want to keep choosing, in every sweet moment, on every quiet day, and in all the beautiful birthdays we have yet to share.',
-      'This little website may have taken time to make, but you are the reason behind every detail. Happy Birthday, my whole universe.',
+      'Happy Birthday, my love. Another beautiful year of you being the sweetest, most wonderful person in my world.',
+      'If I could give you any gift today, it would be the power to see yourself through my eyes—so you would know how deeply loved, incredibly special, and irreplaceable you truly are.',
+      'Thank you for being my warmest comfort, my favorite reason to smile, and my whole universe. Forever and always, I choose you.',
     ],
-    closing: 'Forever and always yours,',
+    closing: 'Forever yours,',
     signature: 'Vikash ♡',
   },
 
   /* ---------- Screen 4: photo gallery ---------- */
   gallery: {
     title: 'Our little universe',
-    subtitle: 'A few moments I would keep forever, if time let me.',
+    subtitle: 'Moments I would keep forever if time let me.',
     photos: [
-      { src: '', alt: 'Your beautiful smile', label: 'Your Radiant Smile', caption: 'The smile that lights up my entire day.', note: 'My favorite view in the world ♡', date: 'Always' },
-      { src: '', alt: 'Our quiet moments', label: 'Our Sweet Talks', caption: 'The first conversation I never wanted to end.', note: 'Just you and me ♡', date: 'Unforgettable' },
-      { src: '', alt: 'Our favorite memories', label: 'Precious Memories', caption: 'A moment I wish I could pause forever.', note: 'Pure happiness ♡', date: 'Treasured' },
-      { src: '', alt: 'Where my heart belongs', label: 'My Comfort & Home', caption: 'How safe, warm, and at ease I feel around you.', note: 'Where I belong ♡', date: 'Every day' },
-      { src: '', alt: 'The start of our story', label: 'The Beginning of Us', caption: 'The start of so many beautiful tomorrows together.', note: 'Falling for you more ♡', date: 'Forever' },
-      { src: '', alt: 'Celebrating your birthday', label: 'Celebrating You Today', caption: 'Today belongs to you, and you deserve all the love in the universe.', note: 'Happy Birthday, my love! 🎂', date: 'Your Special Day' },
+      {
+        src: './photos/beach-sunset.jpg',
+        alt: 'Vikash and Bhavana embracing by the sea at sunset',
+        label: 'Where My World Feels Complete',
+        caption: 'Of all the sunsets in the world, this one with you is my forever favorite.',
+        note: 'Lost in this moment with you ♡',
+        date: 'Our Sunset Horizon',
+      },
+      {
+        src: './photos/sparklers-smile.jpg',
+        alt: 'Bhavana smiling radiantly holding sparklers at night',
+        label: 'Your Radiant Smile',
+        caption: 'Even the brightest sparklers in the night sky can’t match the light in your smile.',
+        note: 'My favorite view in the universe ♡',
+        date: 'Night of Lights',
+      },
+      {
+        src: './photos/horse-riding.jpg',
+        alt: 'Vikash and Bhavana riding horses together in the misty hills',
+        label: 'Our Adventures Together',
+        caption: 'Misty hills, shared laughter, and my favorite adventure partner by my side.',
+        note: 'Riding through life together ♡',
+        date: 'The Misty Trail',
+      },
+      {
+        src: './photos/video-call.jpg',
+        alt: 'Bhavana in cute teddy bear ears on video call with Vikash',
+        label: 'Midnight Whispers',
+        caption: 'Calls where hours feel like minutes, and I never want to say goodbye.',
+        note: 'Cutest girl in the universe ♡',
+        date: 'Late Night Talks',
+      },
+      {
+        src: './photos/traditional-love.jpg',
+        alt: 'Vikash in maroon kurta and Bhavana in traditional dress under festival lights',
+        label: 'Standing Beside You',
+        caption: 'Dressed in our best, but all I could look at was you.',
+        note: 'You take my breath away ♡',
+        date: 'Festive Magic',
+      },
+      {
+        src: './photos/childhood.jpg',
+        alt: 'Little Bhavana as a child holding a plate of treats',
+        label: 'Little Bhavana',
+        caption: 'This sweet little girl was already destined to steal my heart.',
+        note: 'Always my sweetest soul ♡',
+        date: 'Where It All Began',
+      },
     ] as Photo[],
+  },
+
+  /* ---------- Screen 4.5: Reasons I Love You Memory Jar ---------- */
+  memoryJar: {
+    badge: 'A Jar of Sweet Memories',
+    title: 'Reasons I love you',
+    subtitle: 'Tap the jar to open a little folded memory from my heart.',
+    tagText: 'For Bhavana ♡',
+    jarLabel: 'Tap jar to pick a note ✨',
+    reasons: [
+      'The radiant smile on your face holding Diwali sparklers.',
+      'How adorable you look in your teddy headband during late-night calls.',
+      'Riding horses together through misty mountain trails.',
+      'How you outshone every single star under the festive lights.',
+      'The way hours feel like minutes whenever we talk.',
+      'That golden sunset together watching the ocean waves with you.',
+      'How safe, warm, and peaceful my heart feels beside you.',
+      'The little girl with her sweets who grew up to be my whole world.',
+      'The sweet way you say my name that turns any day around.',
+      'The gentle way you care for the people you love with all your heart.',
+      'How you make me want to be the best version of myself every single day.',
+      'Because choosing you every morning and every night is the easiest thing I will ever do.',
+    ],
   },
 
   /* ---------- Screen 5: birthday cake ---------- */
   cake: {
     title: 'Make a wish, my love',
     subtitle: 'Close your eyes, think of your sweetest dream, and blow out the candle.',
-    candleInstruction: 'Tap the flame or blow to make your wish',
+    candleInstruction: 'Tap flame or blow to make a wish',
     wishGrantedBadge: 'A BIRTHDAY WISH FOR BHAVANA',
     wishGrantedHeadline: 'Happy Birthday, {name}! 🎂✨',
     wishGrantedMessage:
-      'May all your silent wishes, secret dreams, and sweetest prayers come true this year.\nYou deserve all the happiness, tenderness, and magic this world has to offer.',
+      'May all your silent wishes and sweetest dreams come true.\nYou deserve all the magic this world has to offer.',
+    cutInstruction: 'Tap the golden knife to cut your birthday slice ♡',
+    cutButton: 'Cut Birthday Cake 🎂✨',
+    sliceHeading: 'The First Slice for Bhavana 🍰',
+    sliceMessage: 'Sweet strawberry-rose sponge, baked with all my love.\nMay every year ahead be even sweeter than the last ♡',
+    biteButton: 'Take a bite together ♡ 🍴',
+    bittenMessage: 'Mmm, delicious! Sweetest birthday slice for the sweetest girl ♡',
     relightButton: 'Make another wish 🕯️',
   },
 
   /* ---------- Screen 6: love garden ---------- */
   garden: {
-    title: 'A birthday garden of notes',
-    subtitle: 'Each glowing flower holds a sweet little thought just for you. Tap them all to bloom.',
+    title: 'A garden of birthday notes',
+    subtitle: 'Each glowing bloom holds a sweet little thought just for you.',
     notes: [
-      'You deserve all the beautiful, magical things life has to offer.',
-      'Happy Birthday to the girl who stole my heart and made it her home.',
-      'Somehow, you make my favorite moments even better just by being there.',
-      'Your laugh is my favorite sound in the entire world.',
-      'I hope this year brings you as much happiness as you give to me every single day.',
-      'You are so much more wonderful and special than you realize.',
-      'Thank you for being the sweetest, most caring girlfriend in the world.',
-      'Wherever you are reading this right now, know that I’m smiling thinking of you. Happy Birthday, Bhavana ♡',
+      'You deserve all the magic life has to offer.',
+      'Happy Birthday to the girl who stole my heart.',
+      'Your laugh is my favorite sound in the world.',
+      'I hope this year brings you as much joy as you give me.',
+      'You are so much more wonderful than you realize.',
+      'Thank you for being the sweetest girlfriend in the world. Happy Birthday, Bhavana ♡',
     ],
   },
 
@@ -102,19 +173,19 @@ export const config = {
     src: './music/Naine_Ra_Lobhi.mp3',
     title: 'Naine Ra Lobhi',
     artist: 'Vikash & Bhavana',
-    caption: 'Press play whenever you’re ready. Some feelings sound better than they read.',
+    caption: 'Our song. Some feelings sound better than they read.',
   },
 
   /* ---------- Screen 8: the final surprise ---------- */
   finale: {
-    lines: ['After all the words…', 'All the wishes and little moments…', 'And everything this little website could never fully say…'],
+    lines: ['After all the words…', 'All the wishes and little moments…'],
     headline: 'MY FAVORITE PART OF THIS WORLD IS YOU.',
     promise:
-      'I can’t promise that every day will be without clouds, but I promise that on every birthday, every morning, and every quiet night, you will always have all of my love.',
-    surpriseButton: 'One last birthday surprise ♡',
+      'Every morning, every quiet night, and every birthday to come, you will always have all my love.',
+    surpriseButton: 'One last surprise ♡',
     finalMessage:
-      'Happy Birthday, Bhavana ♡\n\nYou are my sweetest reality, my warmest comfort, and my favorite reason to smile. I am so endlessly grateful to walk this journey with you.\n\nHere’s to another beautiful year of laughing together, making memories, and loving you more and more every single day.',
+      'Happy Birthday, Bhavana ♡\n\nYou are my sweetest reality and my favorite reason to smile. Endlessly grateful to walk this journey beside you.\n\nHere’s to another beautiful year of laughing together and loving you more each day.',
     hugButton: 'Receive your birthday hug ♡',
-    hugMessage: 'Sending you the biggest, warmest birthday hug, wrapped in all my love. Happy Birthday, my Bhavana! ♡',
+    hugMessage: 'The warmest birthday hug, wrapped in all my love. Happy Birthday, Bhavana! ♡',
   },
 }

@@ -25,13 +25,33 @@ export function initSmoothScroll() {
 
 export function lockScroll(locked: boolean) {
   document.documentElement.style.overflow = locked ? 'hidden' : ''
-  if (locked) lenis?.stop()
-  else lenis?.start()
+  if (locked) {
+    lenis?.stop()
+    resetScrollTop()
+  } else {
+    lenis?.start()
+  }
+}
+
+export function resetScrollTop() {
+  if (typeof window === 'undefined') return
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual'
+  }
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior })
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
+  if (lenis) {
+    lenis.scrollTo(0, { immediate: true })
+  }
 }
 
 export function scrollToTarget(target: string | number, immediate = false) {
   if (lenis) {
-    lenis.scrollTo(target, { immediate, duration: 1.8, easing: (t) => 1 - Math.pow(1 - t, 4) })
+    lenis.scrollTo(target, { immediate, duration: immediate ? 0 : 1.8, easing: (t) => 1 - Math.pow(1 - t, 4) })
+    if (immediate && typeof target === 'number') {
+      window.scrollTo({ top: target, behavior: 'instant' as ScrollBehavior })
+    }
     return
   }
   const behavior: ScrollBehavior = immediate ? 'auto' : 'smooth'

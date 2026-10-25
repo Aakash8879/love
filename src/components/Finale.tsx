@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
-import { RotateCcw } from 'lucide-react'
+import { RotateCcw, Sparkles } from 'lucide-react'
 import { config } from '../config'
 import Heart, { HEART_PATH } from './Heart'
-import EdgeFade from './EdgeFade'
+import CelestialSky, { type CelestialSkyHandle } from './CelestialSky'
+import HeartFireworks, { type HeartFireworksHandle } from './HeartFireworks'
 
 const PETAL = 'M100 100 C 60 90, 62 46, 100 40 C 138 46, 140 90, 100 100 Z'
 
@@ -143,6 +144,8 @@ type Burst = { id: number; hearts: { x: number; y: number; s: number; r: number;
 /** Screen 8: stars, a blooming rose, and the last words. */
 export default function Finale({ onRestart }: { onRestart: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
+  const skyRef = useRef<CelestialSkyHandle>(null)
+  const fireworksRef = useRef<HeartFireworksHandle>(null)
   const inView = useInView(ref, { once: true, amount: 0.3 })
   const reduce = !!useReducedMotion()
   const [showEnvelope, setShowEnvelope] = useState(false)
@@ -161,12 +164,26 @@ export default function Finale({ onRestart }: { onRestart: () => void }) {
 
   const hug = () => {
     setHugged(true)
+    skyRef.current?.triggerShower(10)
+    fireworksRef.current?.launchShow(4)
     const id = Date.now()
     const hearts = Array.from({ length: reduce ? 6 : 22 }, () => ({
       x: (Math.random() - 0.5) * 340, y: -(220 + Math.random() * 320), s: 14 + Math.random() * 22, r: (Math.random() - 0.5) * 50, d: 2.2 + Math.random() * 1.2,
     }))
     setBursts((b) => [...b, { id, hearts }])
     window.setTimeout(() => setBursts((b) => b.filter((x) => x.id !== id)), 3800)
+  }
+
+  // Interactive touch-to-launch anywhere on the night sky
+  const handleSkyClick = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement
+    if (target.closest('button') || target.closest('a') || target.closest('input')) {
+      return
+    }
+    const rect = e.currentTarget.getBoundingClientRect()
+    const clickX = e.clientX - rect.left
+    const clickY = e.clientY - rect.top
+    fireworksRef.current?.launch(clickX, clickY)
   }
 
   const fade = (delay: number) => ({
@@ -179,11 +196,15 @@ export default function Finale({ onRestart }: { onRestart: () => void }) {
     <section
       id="finale"
       aria-labelledby="finale-title"
-      className="grain relative min-h-[100svh] overflow-hidden px-5 pb-28 pt-40 text-ivory sm:px-6 md:pt-52"
+      onClick={handleSkyClick}
+      className="grain relative min-h-[100svh] overflow-hidden px-5 pb-28 pt-40 text-ivory sm:px-6 md:pt-52 cursor-pointer"
       style={{ background: 'radial-gradient(120% 70% at 50% 20%, #4B1728 0%, #33101f 45%, #21131F 100%)' }}
     >
-      <EdgeFade edge="top" color="#F7DDE2" />
       <Stars />
+      {/* 💫 Shooting Stars & Celestial Wishing Skies */}
+      <CelestialSky ref={skyRef} variant="finale" />
+      {/* 🎆 Heart-Shaped Celestial Fireworks */}
+      <HeartFireworks ref={fireworksRef} />
       <div ref={ref} className="relative mx-auto max-w-4xl text-center">
         <Rose bloom={inView} reduce={reduce} />
 
@@ -208,17 +229,39 @@ export default function Finale({ onRestart }: { onRestart: () => void }) {
         </motion.p>
 
         <motion.div {...fade(at.button)} className="mt-12 flex flex-col items-center gap-4">
-          {!showEnvelope && (
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {!showEnvelope && (
+              <motion.button
+                type="button"
+                onClick={() => {
+                  setShowEnvelope(true)
+                  skyRef.current?.triggerShower(7)
+                  fireworksRef.current?.launch()
+                }}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="btn-glow min-h-[52px] rounded-full bg-gradient-to-r from-burgundy via-[#6a2440] to-burgundy px-8 py-4 font-medium tracking-wide shadow-lg"
+              >
+                {surpriseButton}
+              </motion.button>
+            )}
+
+            {/* Launch Fireworks Button */}
             <motion.button
               type="button"
-              onClick={() => setShowEnvelope(true)}
+              onClick={() => fireworksRef.current?.launchShow(5)}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="btn-glow min-h-[52px] rounded-full bg-gradient-to-r from-burgundy via-[#6a2440] to-burgundy px-8 py-4 font-medium tracking-wide"
+              className="btn-glow inline-flex min-h-[52px] items-center gap-2.5 rounded-full border border-champagne/45 bg-ivory/10 px-7 py-4 text-sm font-medium tracking-wide text-ivory backdrop-blur shadow-md transition hover:bg-ivory/20"
             >
-              {surpriseButton}
+              <Sparkles className="h-4 w-4 text-champagne" />
+              <span>Launch Heart Fireworks ✨</span>
             </motion.button>
-          )}
+          </div>
+
+          <p className="text-xs tracking-wider text-blush/60 font-sans">
+            ✦ Tap anywhere in the sky to launch a heart firework ✦
+          </p>
         </motion.div>
 
         <AnimatePresence>{showEnvelope && <Envelope reduce={reduce} />}</AnimatePresence>

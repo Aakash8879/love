@@ -109,11 +109,98 @@ html.lenis, html.lenis body { height: auto; }
 }
 .btn-glow { animation: btn-glow 3.2s ease-in-out infinite; }
 
-/* Record + equalizer */
+/* Record, needle & soundwave ripples */
 @keyframes spin { to { transform: rotate(360deg); } }
-.spin { animation: spin 6s linear infinite; }
+.spin { animation: spin var(--speed, 6s) linear infinite; }
+@keyframes spin-reverse { to { transform: rotate(-360deg); } }
+.spin-reverse { animation: spin-reverse var(--speed, 6s) linear infinite; }
+
 @keyframes eq { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
 .eq { animation: eq var(--d, 0.9s) ease-in-out infinite; transform-origin: bottom; }
+
+/* Soundwave ripples radiating from needle drop */
+@keyframes soundwave-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0.95;
+  }
+  30% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(4.2);
+    opacity: 0;
+  }
+}
+.soundwave-ripple {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  animation: soundwave-ripple var(--duration, 2.6s) cubic-bezier(0.15, 0.85, 0.35, 1) infinite;
+  animation-delay: var(--delay, 0s);
+  will-change: transform, opacity;
+}
+
+/* Ambient aura ripples from turntable */
+@keyframes aura-ripple {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+.aura-ripple {
+  animation: aura-ripple var(--duration, 4s) cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+  animation-delay: var(--delay, 0s);
+  will-change: transform, opacity;
+}
+
+/* Floating musical melody notes from stylus */
+@keyframes float-music-note {
+  0% {
+    transform: translate(0, 0) scale(0.5) rotate(-6deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.95;
+    transform: translate(calc(var(--dx, 12px) * 0.3), -18px) scale(1) rotate(4deg);
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(var(--dx, 20px), -95px) scale(0.85) rotate(-14deg);
+    opacity: 0;
+  }
+}
+.float-music-note {
+  animation: float-music-note var(--duration, 3.2s) cubic-bezier(0.25, 0.7, 0.3, 1) infinite;
+  animation-delay: var(--delay, 0s);
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+/* Stylus needle contact flash */
+@keyframes needle-flash {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
+.needle-flash {
+  animation: needle-flash 0.65s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+  pointer-events: none;
+}
 
 @keyframes rose-sway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
 .rose-sway { animation: rose-sway 7s ease-in-out infinite; transform-origin: 50% 100%; }
@@ -125,5 +212,5 @@ html.lenis, html.lenis body { height: auto; }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .float-heart, .firefly { display: none; }
+  .float-heart, .firefly, .soundwave-ripple, .aura-ripple, .float-music-note { display: none; }
 }

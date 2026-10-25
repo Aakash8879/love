@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { MotionConfig } from 'framer-motion'
 import { RotateCcw } from 'lucide-react'
-import { initSmoothScroll, lockScroll, scrollToTarget } from './lib/smoothScroll'
+import { initSmoothScroll, lockScroll, resetScrollTop } from './lib/smoothScroll'
 import { config } from './config'
 import { MusicProvider } from './context/MusicContext'
 import Atmosphere from './components/Atmosphere'
@@ -11,6 +11,7 @@ import Invitation from './components/Invitation'
 import NameReveal from './components/NameReveal'
 import Letter from './components/Letter'
 import Gallery from './components/Gallery'
+import MemoryJar from './components/MemoryJar'
 import BirthdayCake from './components/BirthdayCake'
 import Garden from './components/Garden'
 import Music, { MiniPlayer } from './components/Music'
@@ -21,15 +22,26 @@ export default function App() {
   const [run, setRun] = useState(0)
   const mainRef = useRef<HTMLElement>(null)
 
-  useEffect(() => initSmoothScroll(), [])
+  useEffect(() => {
+    resetScrollTop()
+    return initSmoothScroll()
+  }, [])
 
   useEffect(() => {
     lockScroll(!opened)
     if (mainRef.current) mainRef.current.inert = !opened
+    if (opened) {
+      resetScrollTop()
+    }
   }, [opened])
 
+  const handleOpen = () => {
+    resetScrollTop()
+    setOpened(true)
+  }
+
   const restart = () => {
-    scrollToTarget(0, true)
+    resetScrollTop()
     setOpened(false)
     setRun((r) => r + 1)
   }
@@ -37,7 +49,7 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user" transition={{ ease: [0.22, 1, 0.36, 1] }}>
     <MusicProvider>
-      {!opened && <Invitation key={`invite-${run}`} onOpen={() => setOpened(true)} />}
+      {!opened && <Invitation key={`invite-${run}`} onOpen={handleOpen} />}
       <Atmosphere />
       <CustomCursor />
       {opened && <ScrollProgress />}
@@ -46,6 +58,7 @@ export default function App() {
         <NameReveal opened={opened} />
         <Letter />
         <Gallery />
+        <MemoryJar />
         <BirthdayCake />
         <Garden />
         <Music />

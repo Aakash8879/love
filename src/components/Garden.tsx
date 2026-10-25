@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { config } from '../config'
-import EdgeFade from './EdgeFade'
+import CelestialSky from './CelestialSky'
 
 /** Flower heads, as % of the garden box. Extra notes reuse positions with an offset. */
 const POSITIONS = [
@@ -66,7 +66,8 @@ export default function Garden() {
       className="grain relative overflow-hidden px-5 pb-40 pt-24 text-ivory sm:px-6 md:pb-52 md:pt-36"
       style={{ background: 'linear-gradient(180deg, #FFF9F5 0%, #4B1728 9%, #2b1424 35%, #21131F 100%)' }}
     >
-      <EdgeFade edge="bottom" color="#F7DDE2" />
+      {/* 💫 Celestial Wishing Sky with Shooting Stars */}
+      <CelestialSky variant="garden" shower={allFound} />
       <div aria-hidden className="pointer-events-none absolute right-[8%] top-[14%] h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(255,249,245,0.55),rgba(247,221,226,0.15)_45%,transparent_70%)] md:h-64 md:w-64" />
       <div className="relative mx-auto max-w-6xl">
         <motion.div
@@ -157,6 +158,27 @@ export default function Garden() {
             {allFound ? 'You found every note. There will always be more where these came from ♡' : `${found.size} of ${notes.length} notes found`}
           </p>
         </div>
+      </div>
+
+      {/* ============================================================ */}
+      {/* ORGANIC CURVED HORIZON DIVIDER (Transitions cleanly to blush #F7DDE2) */}
+      {/* Replaces the murky fog band with a crisp, elegant curve      */}
+      {/* ============================================================ */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 inset-x-0 h-16 w-full overflow-hidden sm:h-24"
+      >
+        <svg
+          viewBox="0 0 1440 120"
+          fill="none"
+          preserveAspectRatio="none"
+          className="h-full w-full text-blush"
+        >
+          <path
+            d="M0,50 C280,15 540,95 820,40 C1100,-15 1300,75 1440,35 L1440,120 L0,120 Z"
+            fill="currentColor"
+          />
+        </svg>
       </div>
     </section>
   )
