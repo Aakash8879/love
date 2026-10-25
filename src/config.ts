@@ -25,33 +25,40 @@ export const config = {
 
   /* ---------- Screen 1: the invitation ---------- */
   invitation: {
-    title: 'Happy Birthday, my love.',
-    subtitle: 'A little universe made just for you and your special day ♡',
+    // When locked and countdown is not complete:
+    lockedTitle: 'Shh... something magical is brewing for you ✨',
+    lockedSubtitle: 'Vikash is preparing a little universe with all of our sweetest memories. Be a good girl and wait until your special day ♡',
+    lockedButton: 'Locked with love until your birthday 🔒',
+
+    // When countdown is complete (unlocked):
+    title: 'Happy Birthday, my prettiest girl.',
+    subtitle: 'The wait is finally over. Your little universe is ready... take my hand ♡',
     button: 'Open your surprise ♡',
-    /** The exact birthday date & time (YYYY-MM-DDTHH:mm:ss). When reached live, the main page opens automatically! */
+
+    /** The exact birthday date & time (YYYY-MM-DDTHH:mm:ss). */
     targetDate: '2026-11-02T00:00:00',
     countdownBadge: "Counting down to Bhavana's special day",
-    birthdayArrivedBadge: "🎉 Happy Birthday, Bhavana! 🎂",
+    birthdayArrivedBadge: "🎉 HAPPY BIRTHDAY, BHAVANA! 🎂✨",
   },
 
   /* ---------- Screen 2: her name ---------- */
   intro: {
-    greeting: 'Happy Birthday, my love,',
-    headlineLines: ['The world is brighter', 'because it gave me you.'],
-    support: 'Out of all the stars in this universe, my heart found its home in you.',
+    greeting: 'Happy Birthday to my favorite human,',
+    headlineLines: ['You are my sweetest reality,', 'and my happiest home.'],
+    support: 'Out of 8 billion people on this planet, my heart found its home in the prettiest girl.',
   },
 
   /* ---------- Screen 3: the letter ---------- */
   letter: {
     title: 'A birthday letter from my heart',
     intro: 'Written with all my love, just for you.',
-    greeting: 'My Dearest Bhavana,',
+    greeting: 'My Sweetest Bhavana,',
     paragraphs: [
-      'Happy Birthday, my love. Another beautiful year of you being the sweetest, most wonderful person in my world.',
-      'If I could give you any gift today, it would be the power to see yourself through my eyes—so you would know how deeply loved, incredibly special, and irreplaceable you truly are.',
-      'Thank you for being my warmest comfort, my favorite reason to smile, and my whole universe. Forever and always, I choose you.',
+      'Happy Birthday, my love. Another beautiful year of you making this world softer, warmer, and so much sweeter just by being in it.',
+      'I love everything about you—from your cute little pout and adorable laughs to the radiant way your eyes sparkle when you are genuinely happy. If I could give you any superpower today, it would be the power to see yourself through my eyes, so you would finally understand how precious, irreplaceable, and deeply loved you truly are.',
+      'Thank you for being my comfort, my favorite person, and my whole universe. I promise to keep loving you, giving you the warmest hugs, and choosing you in every single birthday we have yet to share.',
     ],
-    closing: 'Forever yours,',
+    closing: 'Forever and always your boy,',
     signature: 'Vikash ♡',
   },
 
@@ -73,7 +80,7 @@ export const config = {
         alt: 'Bhavana smiling radiantly holding sparklers at night',
         label: 'Your Radiant Smile',
         caption: 'Even the brightest sparklers in the night sky can’t match the light in your smile.',
-        note: 'My favorite view in the universe ♡',
+        note: 'Prettiest girl in the universe ♡',
         date: 'Night of Lights',
       },
       {
@@ -89,7 +96,7 @@ export const config = {
         alt: 'Bhavana in cute teddy bear ears on video call with Vikash',
         label: 'Midnight Whispers',
         caption: 'Calls where hours feel like minutes, and I never want to say goodbye.',
-        note: 'Cutest girl in the universe ♡',
+        note: 'The cutest girl in the world ♡',
         date: 'Late Night Talks',
       },
       {
@@ -105,7 +112,7 @@ export const config = {
         alt: 'Little Bhavana as a child holding a plate of treats',
         label: 'Little Bhavana',
         caption: 'This sweet little girl was already destined to steal my heart.',
-        note: 'Always my sweetest soul ♡',
+        note: 'Always been my sweetest soul ♡',
         date: 'Where It All Began',
       },
     ] as Photo[],
@@ -119,18 +126,18 @@ export const config = {
     tagText: 'For Bhavana ♡',
     jarLabel: 'Tap jar to pick a note ✨',
     reasons: [
-      'The radiant smile on your face holding Diwali sparklers.',
-      'How adorable you look in your teddy headband during late-night calls.',
-      'Riding horses together through misty mountain trails.',
-      'How you outshone every single star under the festive lights.',
-      'The way hours feel like minutes whenever we talk.',
-      'That golden sunset together watching the ocean waves with you.',
-      'How safe, warm, and peaceful my heart feels beside you.',
-      'The little girl with her sweets who grew up to be my whole world.',
-      'The sweet way you say my name that turns any day around.',
-      'The gentle way you care for the people you love with all your heart.',
-      'How you make me want to be the best version of myself every single day.',
-      'Because choosing you every morning and every night is the easiest thing I will ever do.',
+      'The cute way you scrunch your nose and laugh at my silly jokes.',
+      'How adorable you looked with your teddy bear headband during our late-night calls.',
+      'The way hours feel like seconds whenever I am talking to you.',
+      'How radiant and pretty you looked holding sparklers on Diwali night.',
+      'Riding horses together through the misty mountain trails, holding on tight.',
+      'How safe, peaceful, and warm my heart feels whenever you are near.',
+      'Your sleepy morning voice that instantly melts my heart.',
+      'Standing beside you under festive lights where you outshone every star in the city.',
+      'The little girl with her plate of sweets who grew up to become my entire world.',
+      'The sweet way you say my name that turns any bad day into a good one.',
+      'How effortlessly beautiful you are, even when you have no idea.',
+      'Because loving you is the easiest, most natural thing my heart has ever done.',
     ],
   },
 
@@ -142,13 +149,13 @@ export const config = {
     wishGrantedBadge: 'A BIRTHDAY WISH FOR BHAVANA',
     wishGrantedHeadline: 'Happy Birthday, {name}! 🎂✨',
     wishGrantedMessage:
-      'May all your silent wishes and sweetest dreams come true.\nYou deserve all the magic this world has to offer.',
-    cutInstruction: 'Tap the golden knife to cut your birthday slice ♡',
+      'May all your silent wishes, cute dreams, and sweetest prayers come true.\nYou deserve all the love, happiness, and magic in the universe.',
+    cutInstruction: 'Tap the golden knife to cut your birthday slice together ♡',
     cutButton: 'Cut Birthday Cake 🎂✨',
     sliceHeading: 'The First Slice for Bhavana 🍰',
-    sliceMessage: 'Sweet strawberry-rose sponge, baked with all my love.\nMay every year ahead be even sweeter than the last ♡',
+    sliceMessage: 'Sweet strawberry-rose heart sponge, baked with infinite love.\nA sweet slice for the sweetest soul in my world ♡',
     biteButton: 'Take a bite together ♡ 🍴',
-    bittenMessage: 'Mmm, delicious! Sweetest birthday slice for the sweetest girl ♡',
+    bittenMessage: 'Mmm, delicious! Save a little frosting for my nose too ♡ 🎂',
     relightButton: 'Make another wish 🕯️',
   },
 
@@ -157,11 +164,11 @@ export const config = {
     title: 'A garden of birthday notes',
     subtitle: 'Each glowing bloom holds a sweet little thought just for you.',
     notes: [
-      'You deserve all the magic life has to offer.',
-      'Happy Birthday to the girl who stole my heart.',
-      'Your laugh is my favorite sound in the world.',
-      'I hope this year brings you as much joy as you give me.',
-      'You are so much more wonderful than you realize.',
+      'You are the prettiest thought in my head all day.',
+      'Happy Birthday to the girl who stole my heart and made it home.',
+      'Your cute laugh is my favorite song in the whole universe.',
+      'I hope this year brings you as much happiness as you give to me every day.',
+      'You are so much more special and loved than you will ever know.',
       'Thank you for being the sweetest girlfriend in the world. Happy Birthday, Bhavana ♡',
     ],
   },
@@ -184,8 +191,8 @@ export const config = {
       'Every morning, every quiet night, and every birthday to come, you will always have all my love.',
     surpriseButton: 'One last surprise ♡',
     finalMessage:
-      'Happy Birthday, Bhavana ♡\n\nYou are my sweetest reality and my favorite reason to smile. Endlessly grateful to walk this journey beside you.\n\nHere’s to another beautiful year of laughing together and loving you more each day.',
+      'Happy Birthday, my sweet Bhavana ♡\n\nYou are my sweetest reality, my greatest comfort, and my favorite reason to smile. I am endlessly grateful to walk this journey holding your hand.\n\nHere’s to another beautiful year of laughing at silly things, sharing late-night talks, and loving you more with every single heartbeat.',
     hugButton: 'Receive your birthday hug ♡',
-    hugMessage: 'The warmest birthday hug, wrapped in all my love. Happy Birthday, Bhavana! ♡',
+    hugMessage: 'The warmest, tightest birthday hug, wrapped in all my love. Happy Birthday, my whole universe! ♡',
   },
 }

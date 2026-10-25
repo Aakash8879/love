@@ -21,10 +21,17 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+*:focus {
+  outline: none;
+}
 *:focus-visible {
-  outline: 2px solid #d7b77a;
-  outline-offset: 4px;
-  border-radius: 8px;
+  outline: none;
+}
+button,
+[role="button"],
+a {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 ::selection { background: #e9a5b5; color: #21131f; }
 

@@ -341,6 +341,51 @@ class LetterSoundFx {
       // Audio fallback
     }
   }
+
+  /**
+   * Magical celebration chime arpeggio when countdown completes.
+   */
+  playCelebrationFanfare(muted = false) {
+    if (muted) return
+    const ctx = this.getContext()
+    if (!ctx) return
+    try {
+      const now = ctx.currentTime
+
+      // 1. Crystal harp arpeggio (C5, E5, G5, B5, C6, E6, G6, C7)
+      const freqs = [523.25, 659.25, 783.99, 987.77, 1046.5, 1318.51, 1567.98, 2093.0]
+      freqs.forEach((freq, idx) => {
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = 'sine'
+        const startTime = now + idx * 0.08
+
+        osc.frequency.setValueAtTime(freq, startTime)
+        gain.gain.setValueAtTime(0.0001, startTime)
+        gain.gain.linearRampToValueAtTime(0.09, startTime + 0.02)
+        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 1.2)
+
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start(startTime)
+        osc.stop(startTime + 1.25)
+      })
+
+      // 2. Delicate shimmery high sparkle
+      const chimeOsc = ctx.createOscillator()
+      const chimeGain = ctx.createGain()
+      chimeOsc.type = 'sine'
+      chimeOsc.frequency.setValueAtTime(2637, now + 0.65) // E7 high chime
+      chimeGain.gain.setValueAtTime(0.05, now + 0.65)
+      chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8)
+      chimeOsc.connect(chimeGain)
+      chimeGain.connect(ctx.destination)
+      chimeOsc.start(now + 0.65)
+      chimeOsc.stop(now + 1.85)
+    } catch {
+      // Audio fallback
+    }
+  }
 }
 
 export const letterFx = new LetterSoundFx()
