@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: #21131f;
+}
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  background: #21131f;
+  color: #fff9f5;
+  font-family: Manrope, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+*:focus-visible {
+  outline: 2px solid #d7b77a;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+::selection { background: #e9a5b5; color: #21131f; }
+
+.text-balance { text-wrap: balance; }
+.text-pretty { text-wrap: pretty; }
+
+/* Film grain */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.05;
+}
+.grain-paper::after { opacity: 0.07; }
+
+/* Lenis smooth scrolling */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Keep continuously animated layers on the GPU */
+.leak, .float-heart, .firefly, .twinkle, .spin, .eq, .sway, .rose-sway { will-change: transform; }
+
+/* Ruled paper for the letter */
+.paper-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(2.4rem - 1px),
+    rgba(75, 23, 40, 0.08) calc(2.4rem - 1px),
+    rgba(75, 23, 40, 0.08) 2.4rem
+  );
+  background-position: 0 0.55rem;
+}
+
+/* Light leaks */
+@keyframes leak {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(6%, 4%, 0) scale(1.08); }
+}
+.leak { animation: leak 22s ease-in-out infinite alternate; }
+
+/* Floating hearts */
+@keyframes float-heart {
+  0% { transform: translateY(0) rotate(-8deg); opacity: 0; }
+  15% { opacity: var(--o, 0.5); }
+  100% { transform: translateY(-70vh) rotate(10deg); opacity: 0; }
+}
+.float-heart { animation: float-heart var(--d, 14s) linear infinite; animation-delay: var(--delay, 0s); }
+
+/* Stars */
+@keyframes twinkle { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.9; } }
+.twinkle { animation: twinkle var(--d, 4s) ease-in-out infinite; animation-delay: var(--delay, 0s); }
+
+/* Fireflies */
+@keyframes firefly {
+  0% { transform: translate(0, 0); opacity: 0; }
+  20% { opacity: 1; }
+  50% { transform: translate(var(--dx, 30px), var(--dy, -40px)); opacity: 0.6; }
+  80% { opacity: 1; }
+  100% { transform: translate(calc(var(--dx, 30px) * -0.6), calc(var(--dy, -40px) * 1.4)); opacity: 0; }
+}
+.firefly { animation: firefly var(--d, 9s) ease-in-out infinite; animation-delay: var(--delay, 0s); }
+
+/* Garden flower sway and glow */
+@keyframes sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+.sway { animation: sway var(--d, 5s) ease-in-out infinite; transform-origin: 50% 100%; }
+/* Flower glow: a soft halo that pulses with opacity only (much cheaper than animating filters) */
+.halo { position: absolute; inset: -30%; border-radius: 9999px; pointer-events: none;
+  background: radial-gradient(circle, rgba(247, 221, 226, 0.55) 0%, rgba(233, 165, 181, 0.18) 40%, transparent 68%); }
+@keyframes halo-pulse { 0%, 100% { opacity: 0.35; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.05); } }
+.halo-pulse { animation: halo-pulse 3s ease-in-out infinite; will-change: opacity, transform; }
+.halo-found { opacity: 0.9; background: radial-gradient(circle, rgba(215, 183, 122, 0.6) 0%, rgba(215, 183, 122, 0.15) 45%, transparent 70%); }
+
+/* Invitation button glow */
+@keyframes btn-glow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(215, 183, 122, 0.45), 0 0 30px -4px rgba(233, 165, 181, 0.45); }
+  50% { box-shadow: 0 0 0 1px rgba(215, 183, 122, 0.8), 0 0 60px 2px rgba(233, 165, 181, 0.7); }
+}
+.btn-glow { animation: btn-glow 3.2s ease-in-out infinite; }
+
+/* Record + equalizer */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 6s linear infinite; }
+@keyframes eq { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1); } }
+.eq { animation: eq var(--d, 0.9s) ease-in-out infinite; transform-origin: bottom; }
+
+@keyframes rose-sway { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(1.5deg); } }
+.rose-sway { animation: rose-sway 7s ease-in-out infinite; transform-origin: 50% 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .float-heart, .firefly { display: none; }
+}
