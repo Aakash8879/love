@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -14,6 +14,53 @@ html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* ============================================================ */
+/* CUSTOM LUXURY CELESTIAL VERTICAL & HORIZONTAL SCROLLBAR      */
+/* Replaces native chunky grey browser scrollbar with a slim,   */
+/* glowing rose-gold and champagne gradient thumb on dark plum  */
+/* ============================================================ */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #190a18;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #D7B77A 0%, #E9A5B5 48%, #A83A58 100%);
+  border-radius: 9999px;
+  border: 2px solid #190a18;
+  box-shadow: inset 0 0 6px rgba(255, 249, 245, 0.45);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FFF9F5 0%, #E9A5B5 45%, #D7B77A 100%);
+  box-shadow: 0 0 12px rgba(233, 165, 181, 0.85), inset 0 0 6px rgba(255, 255, 255, 0.8);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, #E9A5B5 0%, #D7B77A 100%);
+}
+
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0;
+  height: 0;
+}
+
+::-webkit-scrollbar-corner {
+  background: #190a18;
+}
+
+/* Firefox standard scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #D7B77A #190a18;
+}
+
 body {
   background: #21131f;
   color: #fff9f5;

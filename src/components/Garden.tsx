@@ -62,6 +62,7 @@ export default function Garden() {
 
   return (
     <section
+      id="garden"
       aria-labelledby="garden-title"
       className="grain relative overflow-hidden px-5 pb-40 pt-24 text-ivory sm:px-6 md:pb-52 md:pt-36"
       style={{ background: 'linear-gradient(180deg, #FFF9F5 0%, #4B1728 9%, #2b1424 35%, #21131F 100%)' }}

@@ -190,6 +190,7 @@ export default function Gallery() {
 
   return (
     <section
+      id="gallery"
       aria-labelledby="gallery-title"
       className="relative overflow-hidden px-5 py-24 text-burgundy sm:px-6 md:py-36"
       style={{

@@ -141,6 +141,7 @@ export default function Music() {
 
   return (
     <section
+      id="music"
       aria-labelledby="music-title"
       className="relative overflow-hidden bg-blush px-5 py-24 text-burgundy sm:px-6 md:py-32"
     >

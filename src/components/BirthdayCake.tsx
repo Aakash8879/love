@@ -247,6 +247,7 @@ export default function BirthdayCake() {
 
   return (
     <section
+      id="cake"
       aria-labelledby="cake-title"
       className="relative overflow-hidden bg-ivory px-5 py-24 text-burgundy sm:px-6 md:py-36"
     >
