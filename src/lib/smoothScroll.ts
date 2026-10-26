@@ -10,7 +10,7 @@ let rafId = 0
 
 export function initSmoothScroll() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return () => {}
-  lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.95, smoothWheel: true })
+  lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1.0, smoothWheel: true, syncTouch: false })
   const raf = (time: number) => {
     lenis?.raf(time)
     rafId = requestAnimationFrame(raf)

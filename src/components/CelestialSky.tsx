@@ -219,8 +219,25 @@ const CelestialSky = forwardRef<CelestialSkyHandle, CelestialSkyProps>(function 
     resize()
     window.addEventListener('resize', resize)
 
-    // Animation frame render loop
+    let isVisible = true
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        isVisible = entry ? entry.isIntersecting : true
+        if (isVisible && !animFrameRef.current) {
+          animFrameRef.current = requestAnimationFrame(render)
+        }
+      },
+      { threshold: 0.02 }
+    )
+    observer.observe(canvas)
+
+    // Animation frame render loop (auto-pauses when off-screen to preserve 60-120fps)
     const render = () => {
+      if (!isVisible) {
+        animFrameRef.current = null
+        return
+      }
       const rect = canvas.getBoundingClientRect()
       const w = rect.width
       const h = rect.height
@@ -365,6 +382,7 @@ const CelestialSky = forwardRef<CelestialSkyHandle, CelestialSkyProps>(function 
     animFrameRef.current = requestAnimationFrame(render)
 
     return () => {
+      observer.disconnect()
       window.removeEventListener('resize', resize)
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
     }
