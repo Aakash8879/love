@@ -53,6 +53,9 @@ function RollingNumber({ value, isUnlocked }: { value: string; isUnlocked: boole
 
 function calculateCountdown(targetDateString: string): CountdownTime {
   const target = new Date(targetDateString).getTime()
+  if (isNaN(target)) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, hasReached: false }
+  }
   const now = Date.now()
   const diff = target - now
 
@@ -80,10 +83,16 @@ export default function Invitation({ onOpen }: { onOpen: () => void }) {
   const wasCountingRef = useRef(!time.hasReached)
   const [shake, setShake] = useState(false)
   const [showLockedHint, setShowLockedHint] = useState(false)
-  const [previewUnlocked, setPreviewUnlocked] = useState(false)
-  const clickBadgeCountRef = useRef(0)
+  const lockedHintTimerRef = useRef<number | null>(null)
 
-  const isUnlocked = time.hasReached || previewUnlocked
+  // Safe developer preview: only unlocks early if ?preview=true is added in the URL.
+  // Random clicks or taps anywhere on the screen will NEVER unlock the website early.
+  const isPreview = useMemo(() => {
+    if (typeof window === 'undefined') return false
+    return new URLSearchParams(window.location.search).has('preview')
+  }, [])
+
+  const isUnlocked = time.hasReached || isPreview
 
   const celebrationConfetti = useMemo<ConfettiPiece[]>(() => {
     if (!isUnlocked) return []
@@ -106,18 +115,6 @@ export default function Invitation({ onOpen }: { onOpen: () => void }) {
     resetScrollTop()
   }, [])
 
-  const handleBadgeClick = () => {
-    clickBadgeCountRef.current += 1
-    if (clickBadgeCountRef.current >= 3) {
-      setPreviewUnlocked((prev) => {
-        const next = !prev
-        if (next) letterFx.playCelebrationFanfare()
-        return next
-      })
-      clickBadgeCountRef.current = 0
-    }
-  }
-
   const open = () => {
     if (leaving) return
     setLeaving(true)
@@ -134,7 +131,8 @@ export default function Invitation({ onOpen }: { onOpen: () => void }) {
       setShake(true)
       setShowLockedHint(true)
       setTimeout(() => setShake(false), 500)
-      setTimeout(() => setShowLockedHint(false), 4000)
+      if (lockedHintTimerRef.current) clearTimeout(lockedHintTimerRef.current)
+      lockedHintTimerRef.current = window.setTimeout(() => setShowLockedHint(false), 4000)
       return
     }
     open()
@@ -310,13 +308,12 @@ export default function Invitation({ onOpen }: { onOpen: () => void }) {
           <span className="h-px w-12 bg-gradient-to-l from-transparent to-champagne/70" />
         </motion.div>
 
-        {/* Live Countdown Status Badge (Tapping 3x toggles developer test unlock) */}
+        {/* Live Countdown Status Badge */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.35 }}
-          onClick={handleBadgeClick}
-          className="mb-5 inline-flex cursor-pointer select-none items-center gap-2 rounded-full border border-champagne/35 bg-plum/60 px-4 py-1.5 text-xs font-semibold tracking-wider text-champagne shadow-md backdrop-blur-md outline-none focus:outline-none"
+          className="mb-5 inline-flex cursor-default select-none items-center gap-2 rounded-full border border-champagne/35 bg-plum/60 px-4 py-1.5 text-xs font-semibold tracking-wider text-champagne shadow-md backdrop-blur-md outline-none"
         >
           {isUnlocked ? (
             <>
